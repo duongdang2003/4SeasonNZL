@@ -24,11 +24,8 @@ public class LighController : MonoBehaviour
         } else {
             inten = (1 - intensity)*4;
         }
-        Debug.Log(inten);
-
         if (inten > 2) inten = 2;
         else if (inten < 0) inten = 0;
-        // Debug.Log(inten);
         _mainDirectionLight.intensity = inten;
     }
 }
