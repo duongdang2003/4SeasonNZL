@@ -16,16 +16,19 @@ public class TimeController : MonoBehaviour
     private void Start() {
         _timeScroller = UIConstants.TimeScroller.GetComponent<ScrollRect>();
         _timeScroller.verticalNormalizedPosition = 0.583333333f;
+        LighController.Instance.SetLight(1 - _timeScroller.verticalNormalizedPosition);
         _timeDisplay = UIConstants.TimeDisplay.GetComponent<Text>();
         _timeScrollDisplay=  UIConstants.TimeScrollDisplay.GetComponentInChildren<Text>();
     }
     public void UpdateTime(){
+        // if(_timeScroller.verticalNormalizedPosition >= 0 && _timeScroller.verticalNormalizedPosition <= 1){}
         string period = "AM";
         float time = 1440 * (1 - _timeScroller.verticalNormalizedPosition) / 60;
         if (time < 0) time = 0;
         else if (time >= 12){
             time -= 12;
             period = "PM";
+            if (time > 12) time = 12;
         }
         double minute = Convert.ToInt32(Math.Floor(time));
         minute = Math.Round((time - minute)*60);
