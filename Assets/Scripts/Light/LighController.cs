@@ -21,18 +21,20 @@ public class LighController : MonoBehaviour
         float inten;
         if(intensity <= 0.5f){
             inten = intensity * 4;
-            // _mainDirectionLight.transform.Rotate(inten, 0, 0);
         } else {
             inten = (1 - intensity)*4;
         }
-        if (inten > 2) inten = 2;
-        else if (inten < 0) inten = 0;
 
-        // _mainDirectionLight.transform.Rotate(new Vector3(inten, 0, 0));
-        // Vector3 currentEulerAngles = _mainDirectionLight.transform.eulerAngles;
-        // currentEulerAngles.y = 0;
-        // currentEulerAngles.z = 0;
-        // transform.eulerAngles = currentEulerAngles;
+        inten = Mathf.Clamp(inten, 0, 2);
+
+        float targetRotationX = Mathf.Lerp(0, 180, intensity / 2);
+        Vector3 currentEulerAngles = _mainDirectionLight.transform.eulerAngles;
+        Quaternion targetRotation = Quaternion.Euler(targetRotationX, currentEulerAngles.y, currentEulerAngles.z);
+        _mainDirectionLight.transform.rotation = Quaternion.Lerp(
+            _mainDirectionLight.transform.rotation, 
+            targetRotation, 
+            Time.deltaTime * 2
+        );
 
         _mainDirectionLight.intensity = inten;
     }

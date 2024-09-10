@@ -5,10 +5,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class TimeDisplay : MonoBehaviour, IPointerClickHandler
+public class TimeDisplay : Menu,IPointerClickHandler
 {
     public static TimeDisplay Instance;
-    private bool _displayScroller = false;
 
     private void Awake() {
         if (Instance == null)
@@ -16,23 +15,27 @@ public class TimeDisplay : MonoBehaviour, IPointerClickHandler
         else
             Destroy(gameObject);
     }
-    private void Start() {
-        UIConstants.TimeScroller.GetComponent<ScrollRect>().verticalNormalizedPosition = 0.583333333f;
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(!isOpen){
+            UIController.Instance.OpenMenu(0);
+        } else {
+            UIController.Instance.CloseMenu(0);
+        }
+    }
+    public override void Open()
+    {
+        base.Open();
+        UIConstants.TimeScroller.SetActive(true);
+        UIConstants.TimeScrollDisplay.SetActive(true);
+
+    }
+    public override void Close()
+    {
+        base.Close();
         UIConstants.TimeScroller.SetActive(false);
         UIConstants.TimeScrollDisplay.SetActive(false);
     }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if(!_displayScroller){
-            UIConstants.TimeScroller.SetActive(true);
-            UIConstants.TimeScrollDisplay.SetActive(true);
-            _displayScroller = true;
-        } else {
-            UIConstants.TimeScroller.SetActive(false);
-            UIConstants.TimeScrollDisplay.SetActive(false);
-            _displayScroller = false;
-        }
-    }
-    public bool IsScrollerOpen() => _displayScroller;
+    public bool IsScrollerOpen() => isOpen;
     
 }

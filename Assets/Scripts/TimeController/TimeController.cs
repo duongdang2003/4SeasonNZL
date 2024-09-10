@@ -19,6 +19,9 @@ public class TimeController : MonoBehaviour
         LighController.Instance.SetLight(1 - _timeScroller.verticalNormalizedPosition);
         _timeDisplay = UIConstants.TimeDisplay.GetComponent<Text>();
         _timeScrollDisplay=  UIConstants.TimeScrollDisplay.GetComponentInChildren<Text>();
+
+        UIConstants.TimeScroller.GetComponent<ScrollRect>().verticalNormalizedPosition = 0.583333333f;
+        UIController.Instance.CloseMenu(0);
     }
     public void UpdateTime(){
         // if(_timeScroller.verticalNormalizedPosition >= 0 && _timeScroller.verticalNormalizedPosition <= 1){}
