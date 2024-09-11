@@ -68,26 +68,64 @@ public class CameraPosMenu : MonoBehaviour
         _cameraPos.Add(_cameraPos.Count, captureInfor);
         StartCoroutine(CaptureImage(cameraViewPic.GetComponent<Image>()));
     }
-    IEnumerator CaptureImage(Image pic)
+    public IEnumerator CaptureImage(Image pic)
     {
+        // Ensure the RenderTexture is assigned and active
+        if (captureCamera == null || captureCamera.targetTexture == null)
+        {
+            Debug.LogError("Capture Camera or its targetTexture is not assigned.");
+            yield break;
+        }
+
         yield return new WaitForEndOfFrame();
+
         RenderTexture currentRT = RenderTexture.active;
+
         RenderTexture.active = captureCamera.targetTexture;
 
         captureCamera.Render();
 
-        Texture2D Image = new (captureCamera.targetTexture.width, captureCamera.targetTexture.height);
-        Image.ReadPixels(new Rect(0, 0, captureCamera.targetTexture.width, captureCamera.targetTexture.height), 0, 0);
-        Image.Apply();
+        Texture2D capturedTexture = new Texture2D(captureCamera.targetTexture.width, captureCamera.targetTexture.height, TextureFormat.RGB24, false);
+
+        capturedTexture.ReadPixels(new Rect(0, 0, captureCamera.targetTexture.width, captureCamera.targetTexture.height), 0, 0);
+        capturedTexture.Apply();
+
         RenderTexture.active = currentRT;
-        
-        var Bytes = Image.EncodeToPNG();
-        Destroy(Image);
 
-        File.WriteAllBytes(Application.dataPath + "/Sprites/Backgrounds/" + FileCounter + ".png", Bytes);
+        Sprite capturedSprite = Sprite.Create(capturedTexture, new Rect(0, 0, capturedTexture.width, capturedTexture.height), new Vector2(0.5f, 0.5f), 100.0f);
+
+        if (pic != null)
+        {
+            pic.sprite = capturedSprite;
+        }
+        else
+        {
+            Debug.LogError("UI Image component is not assigned.");
+        }
+
+        SaveSpriteAsPNG(capturedSprite, Application.dataPath + "/Sprites/Backgrounds/" + FileCounter + ".png");
         FileCounter++;
+    }
 
-        Sprite capturedSprite = Sprite.Create(Image, new Rect(0, 0, Image.width, Image.height), new Vector2(0.5f, 0.5f));
-        pic.sprite = capturedSprite;
+    private void SaveSpriteAsPNG(Sprite sprite, string filePath)
+    {
+        if (sprite == null)
+        {
+            Debug.LogError("Sprite is null, cannot save.");
+            return;
+        }
+
+        Texture2D texture = sprite.texture;
+
+        byte[] bytes = texture.EncodeToPNG();
+
+        string directoryPath = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);
+        }
+
+        File.WriteAllBytes(filePath, bytes);
+        Debug.Log($"Sprite's texture saved as PNG to: {filePath}");
     }
 }
