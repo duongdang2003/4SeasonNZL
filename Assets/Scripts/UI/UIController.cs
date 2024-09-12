@@ -14,6 +14,7 @@ public class UIController : MonoBehaviour
         UIConstants.CameraPosMenu = GameObject.FindWithTag("CameraPositionMenu");
         UIConstants.menus[0] = GameObject.FindWithTag("TimeDisplay");
         UIConstants.menus[1] = GameObject.FindWithTag("CameraPosButton");
+        UIConstants.menus[2] = GameObject.FindWithTag("CrossSection");
 
         ColorUtility.TryParseHtmlString("#2E2E2E", out UIConstants.DEFAULT_COLOR);
         ColorUtility.TryParseHtmlString("#007CFF", out UIConstants.SELECTED_COLOR);
@@ -33,6 +34,12 @@ public class UIController : MonoBehaviour
     }
     public void CloseMenu(int index){
         UIConstants.menus[index].GetComponent<Menu>().Close();
+    }
+    public bool IsMenuOpen(){
+        foreach(GameObject menu in UIConstants.menus){
+            if (menu.GetComponent<Menu>().IsOpen()) return true;
+        }
+        return false;
     }
 
 }

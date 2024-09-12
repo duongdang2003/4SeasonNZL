@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public static class UIConstants
 {
     // menu
-    public static GameObject[] menus = new GameObject[2];
+    public static GameObject[] menus = new GameObject[3];
     public enum MenuType {
         TimeSetting,
         CameraPos

@@ -12,4 +12,5 @@ public class Menu : MonoBehaviour
     public virtual void Close(){
         isOpen = false;
     }
+    public bool IsOpen() => isOpen;
 }

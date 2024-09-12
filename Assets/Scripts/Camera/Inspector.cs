@@ -7,7 +7,7 @@ public class Inspector : MonoBehaviour
     public float rotateSpeed;   
     void Update()
     {
-        if(Input.GetMouseButton(0) && !TimeDisplay.Instance.IsScrollerOpen()){
+        if(Input.GetMouseButton(0) && !TimeDisplay.Instance.IsScrollerOpen() && !UIController.Instance.IsMenuOpen()){
             float horizontal = Input.GetAxis("Mouse X");
             float vertical = Input.GetAxis("Mouse Y");
 
